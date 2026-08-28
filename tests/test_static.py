@@ -1,0 +1,18 @@
+def test_root_redirects_to_static_index(client):
+    response = client.get("/", follow_redirects=False)
+
+    assert response.status_code == 307
+    assert response.headers["location"] == "/static/index.html"
+
+
+def test_static_index_is_available(client):
+    response = client.get("/static/index.html")
+
+    assert response.status_code == 200
+    assert "Mergington High School" in response.text
+
+
+def test_missing_static_file_returns_not_found(client):
+    response = client.get("/static/missing.js")
+
+    assert response.status_code == 404
